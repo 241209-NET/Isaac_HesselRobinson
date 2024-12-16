@@ -16,7 +16,7 @@ USE MyDatabase;
         SUM(Total) as 'Sales Total' 
         FROM [dbo].[Invoice]
         GROUP BY year(InvoiceDate)
-        HAVING year(InvoiceDate) = 2009
+        HAVING year(InvoiceDate) = 2009;
     -- (challenge: find the invoice count sales total for every year using one query)
     SELECT year(InvoiceDate),
         COUNT(year(InvoiceDate)) as 'Total Invoices',
@@ -29,32 +29,69 @@ USE MyDatabase;
         COUNT(InvoiceLineId) as 'Lines in Invoice'
         FROM [dbo].InvoiceLine
         WHERE InvoiceId = 37
-        GROUP BY InvoiceId
+        GROUP BY InvoiceId;
 
 -- how many invoices per country? BillingCountry  # of invoices -
     SELECT BillingCountry,
         COUNT(BillingCountry) as 'Total Invoices'
         FROM [dbo].[Invoice]
-        GROUP BY BillingCountry
+        GROUP BY BillingCountry;
 
 -- Retrieve the total sales per country, ordered by the highest total sales first.
     SELECT BillingCountry,
         SUM(Total) as 'Sales Total'
         FROM [dbo].[Invoice]
         GROUP BY BillingCountry
-        ORDER BY 'Sales Total' DESC
+        ORDER BY 'Sales Total' DESC;
 
 
 -- JOINS CHALLENGES
 -- Every Album by Artist
-
+    SELECT Artist.Name, Album.Title
+        FROM [dbo].[Album]
+        INNER JOIN [dbo].[Artist]
+        ON Album.ArtistId = Artist.ArtistId
+        ORDER BY Artist.Name;
 -- All songs of the rock genre
-
+    SELECT Track.Name
+        FROM [dbo].[Track]
+        INNER JOIN [dbo].[Genre]
+        ON Track.GenreId = Genre.GenreId
+        WHERE Genre.Name = 'Rock';
 -- Show all invoices of customers from brazil (mailing address not billing)
+    SELECT Invoice.InvoiceDate, CONCAT(Customer.FirstName, ' ', Customer.LastName) as 'Customer', CONCAT(Invoice.BillingAddress, ', ', Invoice.BillingCity, ', ', Invoice.BillingState, ', ', Invoice.BillingCountry) as 'Billing Address', Invoice.Total
+        FROM [dbo].[Invoice]
+        INNER JOIN [dbo].[Customer]
+        ON Invoice.CustomerId = Customer.CustomerId
+        WHERE Customer.Country = 'Brazil'
+        ORDER BY Invoice.InvoiceDate;
 
 -- Show all invoices together with the name of the sales agent for each one
+    SELECT Invoice.InvoiceDate, CONCAT(Employee.FirstName, ' ', Employee.LastName) as 'Sales Agent', CONCAT(Customer.FirstName, ' ', Customer.LastName) as 'Customer', CONCAT(Invoice.BillingAddress, ', ', Invoice.BillingCity, ', ', Invoice.BillingState, ', ', Invoice.BillingCountry) as 'Billing Address', Invoice.Total
+        FROM [dbo].[Invoice]
+        INNER JOIN [dbo].[Customer]
+            ON Invoice.CustomerId = Customer.CustomerId
+        INNER JOIN [dbo].[Employee]
+            ON Customer.SupportRepId = Employee.EmployeeId
+        ORDER BY Invoice.InvoiceDate;
 
 -- Which sales agent made the most sales in 2009?
+    SELECT Employee.LastName,--CONCAT(Employee.FirstName, ' ', Employee.LastName) as 'Highest Selling Agent',
+        MAX(sales_count) as 'Number of Sales'
+        FROM(
+            SELECT Employee.LastName,
+                COUNT(Invoice.InvoiceId) AS sales_count
+                FROM [dbo].[Employee]
+                INNER JOIN [dbo].[Customer]
+                    ON Customer.SupportRepId = Employee.EmployeeId
+                INNER JOIN [dbo].[Invoice]
+                    ON Invoice.CustomerId = Customer.CustomerId
+                GROUP BY Employee.lastName
+        ) AS counted
+        INNER JOIN [dbo].[Employee]
+            ON counted.LastName = Employee.LastName
+        GROUP BY Employee.LastName;
+
 
 -- How many customers are assigned to each sales agent?
 
