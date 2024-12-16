@@ -1,0 +1,1 @@
+Server=localhost;User Id=sa;Password=NotPassword@123;TrustServerCertificate=true;
