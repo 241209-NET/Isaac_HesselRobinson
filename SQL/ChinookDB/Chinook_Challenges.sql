@@ -1,5 +1,27 @@
 -- On the Chinook DB, practice writing queries with the following exercises
 
+
+GO
+CREATE or ALTER FUNCTION ConcatName(@FirstName VARCHAR(15), @LastName VARCHAR(15))
+    RETURNS VARCHAR(30)
+    AS
+    BEGIN
+    RETURN CONCAT(@FirstName, ' ', @LastName)
+    END
+GO
+
+GO
+CREATE or ALTER PROCEDURE InvoicesAndSalesInYear(@Year INT)
+    AS
+    BEGIN
+    SELECT year(InvoiceDate) as 'Year',
+        COUNT(year(InvoiceDate)) as 'Total Invoices'
+        FROM [dbo].[Invoice]
+        GROUP BY year(InvoiceDate)
+        HAVING year(InvoiceDate) = @Year;
+    END;
+GO
+
 USE MyDatabase;
 -- BASIC CHALLENGES
 -- List all customers (full name, customer id, and country) who are not in the USA
@@ -10,7 +32,11 @@ USE MyDatabase;
     SELECT EmployeeID, FirstName, LastName, Country FROM [dbo].[Employee];
 -- Retrieve a list of all countries in billing addresses on invoices
     SELECT BillingCountry FROM [dbo].[Invoice];
+
+
 -- Retrieve how many invoices there were in 2009, and what was the sales total for that year?
+    EXEC InvoicesAndSalesInYear [2009];
+
     SELECT year(InvoiceDate),
         COUNT(year(InvoiceDate)) as 'Total Invoices',
         SUM(Total) as 'Sales Total' 
@@ -23,7 +49,6 @@ USE MyDatabase;
         SUM(Total) as 'Sales Total' 
         FROM [dbo].[Invoice]
         GROUP BY year(InvoiceDate)
-
 -- how many line items were there for invoice #37
     SELECT InvoiceId,
         COUNT(InvoiceLineId) as 'Lines in Invoice'
@@ -59,7 +84,7 @@ USE MyDatabase;
         ON Track.GenreId = Genre.GenreId
         WHERE Genre.Name = 'Rock';
 -- Show all invoices of customers from brazil (mailing address not billing)
-    SELECT Invoice.InvoiceDate, CONCAT(Customer.FirstName, ' ', Customer.LastName) as 'Customer', CONCAT(Invoice.BillingAddress, ', ', Invoice.BillingCity, ', ', Invoice.BillingState, ', ', Invoice.BillingCountry) as 'Billing Address', Invoice.Total
+    SELECT Invoice.InvoiceDate, dbo.ConcatName(Customer.FirstName, Customer.LastName) as 'Customer', CONCAT(Invoice.BillingAddress, ', ', Invoice.BillingCity, ', ', Invoice.BillingState, ', ', Invoice.BillingCountry) as 'Billing Address', Invoice.Total
         FROM [dbo].[Invoice]
         INNER JOIN [dbo].[Customer]
         ON Invoice.CustomerId = Customer.CustomerId
@@ -67,7 +92,7 @@ USE MyDatabase;
         ORDER BY Invoice.InvoiceDate;
 
 -- Show all invoices together with the name of the sales agent for each one
-    SELECT Invoice.InvoiceDate, CONCAT(Employee.FirstName, ' ', Employee.LastName) as 'Sales Agent', CONCAT(Customer.FirstName, ' ', Customer.LastName) as 'Customer', CONCAT(Invoice.BillingAddress, ', ', Invoice.BillingCity, ', ', Invoice.BillingState, ', ', Invoice.BillingCountry) as 'Billing Address', Invoice.Total
+    SELECT Invoice.InvoiceDate, dbo.ConcatName(Employee.FirstName, Employee.LastName) as 'Sales Agent', dbo.ConcatName(Customer.FirstName, Customer.LastName) as 'Customer', CONCAT(Invoice.BillingAddress, ', ', Invoice.BillingCity, ', ', Invoice.BillingState, ', ', Invoice.BillingCountry) as 'Billing Address', Invoice.Total
         FROM [dbo].[Invoice]
         INNER JOIN [dbo].[Customer]
             ON Invoice.CustomerId = Customer.CustomerId
@@ -75,24 +100,17 @@ USE MyDatabase;
             ON Customer.SupportRepId = Employee.EmployeeId
         ORDER BY Invoice.InvoiceDate;
 
+
+
 -- Which sales agent made the most sales in 2009?
-    SELECT Employee.LastName,--CONCAT(Employee.FirstName, ' ', Employee.LastName) as 'Highest Selling Agent',
-        MAX(sales_count) as 'Number of Sales'
-        FROM(
-            SELECT Employee.LastName,
-                COUNT(Invoice.InvoiceId) AS sales_count
-                FROM [dbo].[Employee]
-                INNER JOIN [dbo].[Customer]
-                    ON Customer.SupportRepId = Employee.EmployeeId
-                INNER JOIN [dbo].[Invoice]
-                    ON Invoice.CustomerId = Customer.CustomerId
-                GROUP BY Employee.lastName
-        ) AS counted
-        INNER JOIN [dbo].[Employee]
-            ON counted.LastName = Employee.LastName
-        GROUP BY Employee.LastName;
-
-
+    SELECT TOP 1  dbo.ConcatName(Employee.FirstName, Employee.LastName) AS 'Sales Rep',
+        SUM(Invoice.Total) as TotalSales
+        FROM Invoice
+        INNER JOIN Customer ON Invoice.CustomerId = Customer.CustomerId
+        INNER JOIN Employee ON Customer.SupportRepId = Employee.EmployeeId
+        WHERE YEAR(Invoice.InvoiceDate) = 2009
+        GROUP BY Employee.FirstName, Employee.LastName
+        ORDER BY TotalSales DESC;
 -- How many customers are assigned to each sales agent?
 
 -- Which track was purchased the most ing 20010?
