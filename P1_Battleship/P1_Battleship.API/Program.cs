@@ -1,3 +1,4 @@
+//dotnet run --project "C:\Users\Isaac\Desktop\Isaac_HesselRobinson\P1_Battleship\P1_Battleship.API"
 using Microsoft.EntityFrameworkCore;
 using Battleship.API.Data;
 using Battleship.API.Repository;

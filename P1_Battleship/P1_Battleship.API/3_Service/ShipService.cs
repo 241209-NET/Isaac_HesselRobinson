@@ -5,9 +5,9 @@ namespace Battleship.API.Service;
 
 public class ShipService : IShipService
 {
-    private readonly IShipRespository shipRepository;
+    private readonly IShipRepository shipRepository;
 
-    public ShipService(IShipRespository _shipRepository) => shipRepository = _shipRepository;
+    public ShipService(IShipRepository _shipRepository) => shipRepository = _shipRepository;
 
     public Ship CreateNewShip(Ship _newShip)
     {
