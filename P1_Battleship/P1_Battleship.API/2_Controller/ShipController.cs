@@ -8,9 +8,9 @@ namespace Battleship.API.Controller;
 [ApiController]
 public class ShipController : ControllerBase
 {
-    readonly ShipService shipService;
+    readonly IShipService shipService;
 
-    public ShipController(ShipService _shipService) => shipService = _shipService;
+    public ShipController(IShipService _shipService) => shipService = _shipService;
 
 
     [HttpGet]
