@@ -1,6 +1,6 @@
 # Battleship
 
-This is a Full Stack Web App made in .NET that allows users to play Battleship.
+This is a backend API made in .NET that allows users to play Battleship.
 
 ## Project Members
 - Isaac Hessel-Robinson
