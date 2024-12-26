@@ -1,0 +1,1 @@
+SELECT * FROM Battleship.dbo.ships;
