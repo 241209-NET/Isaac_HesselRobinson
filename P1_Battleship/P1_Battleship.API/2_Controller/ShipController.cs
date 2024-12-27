@@ -22,12 +22,6 @@ public class ShipController : ControllerBase
 
 
     [HttpPost]
-    public IActionResult PlaceAllShips()
-    {
-        return Ok();
-    }
-
-    [HttpPost]
     public IActionResult CreateNewShip(Ship _newShip)
     {
         var result = shipService.CreateNewShip(_newShip);

@@ -8,5 +8,5 @@ public partial class ShipContext : DbContext
     public ShipContext(){}
     public ShipContext(DbContextOptions<ShipContext> options) : base(options){}
 
-    public virtual DbSet<Ship> ships {get; set;}
+    public virtual required DbSet<Ship> ships {get; set;}
 }

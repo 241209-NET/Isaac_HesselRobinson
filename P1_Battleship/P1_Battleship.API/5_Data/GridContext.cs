@@ -8,5 +8,5 @@ public partial class GridContext : DbContext
     public GridContext(){}
     public GridContext(DbContextOptions<GridContext> options) : base(options){}
 
-    public virtual DbSet<Grid> grids {get; set;}
+    public virtual required DbSet<Grid> grids {get; set;}
 }

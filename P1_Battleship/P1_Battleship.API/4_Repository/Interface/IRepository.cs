@@ -9,4 +9,6 @@ public interface IShipRepository
 public interface IGridRepository
 {
     Grid CreateNewGrid(Grid _newGrid);
+    Grid? GetGridById(int _gridId);
+    void DeleteGrid(int _gridId);
 }
