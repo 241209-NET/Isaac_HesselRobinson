@@ -31,4 +31,17 @@ public class GridService : IGridService
         }
         return grid;
     }
+    
+    public Grid? ShootAtCoordinate(int _gridId, string _coordinate)
+    {
+        var grid = GetGridById(_gridId);
+        if(grid != null)
+        {
+            if(grid.IsSquareOnGrid(_coordinate))
+            {
+                gridRepository.SetCoordinateStatus(_gridId, _coordinate, SquareStatus.MISS);
+            }
+        }
+        return grid;
+    }
 }

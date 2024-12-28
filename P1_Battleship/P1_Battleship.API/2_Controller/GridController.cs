@@ -18,6 +18,13 @@ public class GridController : ControllerBase
         var result = gridService.CreateNewGrid(_width, _height);
         return Ok(result);
     }
+    
+    [HttpPatch]
+    public IActionResult ShootAtCoordinate(int _gridId, string _coordinate)
+    {
+        var result = gridService.ShootAtCoordinate(_gridId, _coordinate);
+        return Ok(result);
+    }
 
     [HttpGet]
     public IActionResult GetGridById(int _gridId)
@@ -34,4 +41,5 @@ public class GridController : ControllerBase
         if(result is null) return NotFound();
         return Ok(result);
     }
+
 }

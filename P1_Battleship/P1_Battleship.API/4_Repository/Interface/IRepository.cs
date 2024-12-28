@@ -11,4 +11,5 @@ public interface IGridRepository
     Grid CreateNewGrid(Grid _newGrid);
     Grid? GetGridById(int _gridId);
     void DeleteGrid(int _gridId);
+    Grid? SetCoordinateStatus(int _gridId, string _coordinate, SquareStatus _status);
 }

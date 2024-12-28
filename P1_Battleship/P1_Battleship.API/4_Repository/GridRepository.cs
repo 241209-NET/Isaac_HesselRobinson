@@ -25,5 +25,15 @@ public class GridRepository : IGridRepository
         gridContext.grids.Remove(grid!);
         gridContext.SaveChanges();
     }
+    
+    public Grid? SetCoordinateStatus(int _gridId, string _coordinate, SquareStatus _status)
+    {
+        var grid = GetGridById(_gridId);
+        if(grid != null)
+        {
+            grid.SetSquareStatus(_coordinate, _status);
+        }
+        return grid;
+    }
 
 }

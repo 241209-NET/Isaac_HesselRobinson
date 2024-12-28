@@ -14,4 +14,5 @@ public interface IGridService
     Grid CreateNewGrid(Grid _newGrid);
     Grid? GetGridById(int _gridId);
     Grid? DeleteGrid(int _gridId);
+    Grid? ShootAtCoordinate(int _gridId, string _coordinate);
 }
