@@ -3,16 +3,19 @@ using Battleship.API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace P1_Battleship.Migrations.Grid
+namespace P1_Battleship.Migrations
 {
-    [DbContext(typeof(GridContext))]
-    partial class GridContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(ShipContext))]
+    [Migration("20241228174420_ShipID")]
+    partial class ShipID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +24,7 @@ namespace P1_Battleship.Migrations.Grid
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Battleship.API.Model.Grid", b =>
+            modelBuilder.Entity("Battleship.API.Model.Ship", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -29,23 +32,24 @@ namespace P1_Battleship.Migrations.Grid
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.PrimitiveCollection<string>("columns")
+                    b.PrimitiveCollection<string>("hitPoints")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("height")
-                        .HasColumnType("int");
-
-                    b.PrimitiveCollection<string>("shipIds")
+                    b.PrimitiveCollection<string>("positions")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("width")
+                    b.Property<string>("shipName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("size")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
 
-                    b.ToTable("grids");
+                    b.ToTable("ships");
                 });
 #pragma warning restore 612, 618
         }

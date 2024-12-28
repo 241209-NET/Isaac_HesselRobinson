@@ -40,6 +40,7 @@ public class Grid
     public string[] columns { get; set; }
     public int width { get; set; }
     public int height { get; set; }
+    public int[] shipIds { get; set; } = {-1,-1,-1,-1,-1};
 
     public Grid() //never used, but I don't like underlines
     {

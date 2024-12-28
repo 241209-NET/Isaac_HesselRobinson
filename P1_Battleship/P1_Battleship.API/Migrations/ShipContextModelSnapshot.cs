@@ -23,8 +23,11 @@ namespace P1_Battleship.Migrations
 
             modelBuilder.Entity("Battleship.API.Model.Ship", b =>
                 {
-                    b.Property<string>("shipName")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.PrimitiveCollection<string>("hitPoints")
                         .IsRequired()
@@ -34,10 +37,14 @@ namespace P1_Battleship.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("shipName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("size")
                         .HasColumnType("int");
 
-                    b.HasKey("shipName");
+                    b.HasKey("ID");
 
                     b.ToTable("ships");
                 });

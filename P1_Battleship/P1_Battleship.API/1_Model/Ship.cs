@@ -1,15 +1,24 @@
 namespace Battleship.API.Model;
 
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Ship
 {
-    [Key]
-    public required string shipName { get; set; } = "ship";
+    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int ID { get; set; }
+    public string shipName { get; set; } = "ship";
     public int size { get; set; } = 0;
     public string[] positions { get; set; } = { "0","0","0","0","0" };
     public bool[] hitPoints { get; set; } = { true, true, true, true, true };
 
+    public Ship () //never used, but I dislike underlines
+    {
+        shipName = "Small Ship";
+        size = 1;
+        positions = new string[size];
+        hitPoints = new bool[size];
+    }
     public Ship (string _shipName, string[] _positions)
     {
         shipName = _shipName;
