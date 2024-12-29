@@ -6,6 +6,7 @@ public interface IShipService
 {
     Ship CreateNewShip(string[] _positions, ShipType _type);
     IEnumerable<Ship> GetAllShips();
+    Ship? GetShipById(int _Id);
 }
 
 public interface IGridService

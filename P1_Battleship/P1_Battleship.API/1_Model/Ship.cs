@@ -15,7 +15,7 @@ public enum ShipType
 public class Ship
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    public int Id { get; set; }
     public string shipName { get; set; } = "ship";
     public int size { get; set; } = 0;
     public string[] positions { get; set; } = { "0","0","0","0","0" };

@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Battleship.API.Data;
 using Battleship.API.Model;
 
@@ -20,5 +21,9 @@ public class ShipRepository : IShipRepository
     public IEnumerable<Ship> GetAllShips()
     {
         return shipContext.ships.ToList();
+    }
+    public Ship? GetShipById(int _Id)
+    {
+        return shipContext.ships.FirstOrDefault(o => o.Id == _Id);
     }
 }

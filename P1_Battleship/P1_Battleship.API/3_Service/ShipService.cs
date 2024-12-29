@@ -40,4 +40,13 @@ public class ShipService : IShipService
     {
         return shipRepository.GetAllShips();
     }
+    public Ship? GetShipById(int _Id)
+    {
+        Ship? ship = shipRepository.GetShipById(_Id);
+        if(ship == null)
+        {
+            throw new ShipUnknownException("No ship with Id " + _Id);
+        }
+        return ship;
+    }
 }

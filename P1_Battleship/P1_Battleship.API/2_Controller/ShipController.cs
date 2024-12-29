@@ -19,6 +19,12 @@ public class ShipController : ControllerBase
         var result = shipService.GetAllShips();
         return Ok(result);
     }
+    [HttpGet("{Id}")]
+    public IActionResult GetShipById(int Id)
+    {
+        var result = shipService.GetShipById(Id);
+        return Ok(result);
+    }
 
 
     [HttpPost("Carrier")]

@@ -5,6 +5,7 @@ public interface IShipRepository
 {
     Ship CreateNewShip(string[] _positions, string _name);
     IEnumerable<Ship> GetAllShips();
+    Ship? GetShipById(int _Id);
 }
 public interface IGridRepository
 {
