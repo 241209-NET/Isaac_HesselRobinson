@@ -13,6 +13,7 @@ public class ShipRepository : IShipRepository
     {
         Ship newShip = new Ship(_positions, _name);
         shipContext.ships.Add(newShip);
+        shipContext.SaveChanges();
         return newShip;
     }
 
