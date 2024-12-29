@@ -11,9 +11,11 @@ public interface IShipService
 
 public interface IGridService
 {
+    IEnumerable<Grid> GetAllGrids();
+    Grid? GetGridById(int _gridId);
+    IEnumerable<Ship> GetShipsInGrid(int _gridId);
     Grid CreateNewGrid(int _width, int _height);
     Grid CreateNewGrid(Grid _newGrid);
-    Grid? GetGridById(int _gridId);
     Grid? DeleteGrid(int _gridId);
     Grid? ShootAtCoordinate(int _gridId, string _coordinate);
     Grid? AddShipToGrid(int _gridId, int _shipId);

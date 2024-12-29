@@ -6,8 +6,12 @@ namespace Battleship.API.GridException;
 public class GridUnknownException : Exception
 {
     public GridUnknownException(){}
-    public GridUnknownException(string message) : base(message){}
-    public GridUnknownException(string message, Exception inner) : base(message, inner){}
+    public GridUnknownException(int _gridId) : base(ConstructMessage(_gridId)){}
+    public GridUnknownException(int _gridId, Exception inner) : base(ConstructMessage(_gridId), inner){}
+    static string ConstructMessage(int _gridId)
+    {
+        return "Unknown Grid: " + _gridId + ". There is no grid with that Id.";
+    }
 }
 public class GridHasShipTypeException : Exception
 {
@@ -18,6 +22,17 @@ public class GridHasShipTypeException : Exception
     static string ConstructMessage(int _gridId, string _shipType)
     {
         return "Duplicate ship type: Grid " + _gridId + " already has a " + _shipType;
+    }
+}
+public class GridHasShipAtPositionException : Exception
+{
+    public GridHasShipAtPositionException(){}
+    public GridHasShipAtPositionException(int _gridId, string _position, int _shipId) : base(ConstructMessage(_gridId,_position,_shipId)){}
+    public GridHasShipAtPositionException(int _gridId, string _position, int _shipId, Exception inner) : base(ConstructMessage(_gridId,_position,_shipId), inner){}
+
+    static string ConstructMessage(int _gridId, string _position, int _shipId)
+    {
+        return "Overlapping ships: Grid " + _gridId + " already has ship with Id " + _shipId + " at position " + _position;;
     }
 }
 

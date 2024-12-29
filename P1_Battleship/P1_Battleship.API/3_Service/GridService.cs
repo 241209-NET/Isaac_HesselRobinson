@@ -4,6 +4,18 @@ using Battleship.API.GridException;
 
 namespace Battleship.API.Service;
 
+public struct OverlappingShipResult
+{
+    public string position = "";
+    public int shipId = -1;
+    public OverlappingShipResult() {}
+    public OverlappingShipResult(string _position, int _Id) 
+    {
+        position = _position;
+        shipId = _Id;
+    }
+}
+
 public class GridService : IGridService
 {
     private readonly IGridRepository gridRepository;
@@ -13,7 +25,41 @@ public class GridService : IGridService
     {
         gridRepository = _gridRepository;
         shipService = _shipService;
-    } 
+    }
+    
+    public Grid? GetGridById(int _gridId)
+    {
+        Grid? grid = gridRepository.GetGridById(_gridId);
+        if(grid == null)
+        {
+            throw new GridUnknownException(_gridId);
+        }
+        return grid;
+    }
+    public IEnumerable<Grid> GetAllGrids()
+    {
+        return gridRepository.GetAllGrids();
+    }
+    public IEnumerable<Ship> GetShipsInGrid(int _gridId)
+    {
+        Grid? grid = GetGridById(_gridId);
+        List<Ship> ships = new List<Ship>();
+        if(grid != null)
+        {
+            foreach(int shipId in grid.shipIds)
+            {
+                if(shipId > -1)
+                {
+                    Ship? ship = shipService.GetShipById(shipId);
+                    if(ship != null)
+                    {
+                        ships.Add(ship);
+                    }
+                }
+            }
+        }
+        return ships;
+    }
 
 
     public Grid CreateNewGrid(int _width, int _height)
@@ -24,15 +70,6 @@ public class GridService : IGridService
     public Grid CreateNewGrid(Grid _newGrid)
     {
         return gridRepository.CreateNewGrid(_newGrid);
-    }
-    public Grid? GetGridById(int _gridId)
-    {
-        Grid? grid = gridRepository.GetGridById(_gridId);
-        if(grid == null)
-        {
-            throw new GridUnknownException("There is no grid with Id " + _gridId);
-        }
-        return grid;
     }
     public Grid? DeleteGrid(int _gridId)
     {
@@ -49,7 +86,18 @@ public class GridService : IGridService
         var grid = GetGridById(_gridId);
         if(grid != null)
         {
-            if(grid.IsSquareOnGrid(_coordinate))
+            //Prevents a shot that would be off the grid
+            if(!grid.IsSquareOnGrid(_coordinate))
+            {
+                throw new CoordinateOutOfBoundsException(grid, _coordinate);
+            }
+            //Checks if it's a hit
+            else if(false)
+            {
+
+            }
+            //Miss
+            else
             {
                 gridRepository.SetCoordinateStatus(_gridId, _coordinate, SquareStatus.MISS);
             }
@@ -63,6 +111,7 @@ public class GridService : IGridService
         var ship = shipService.GetShipById(_shipId);
         if(grid != null && ship != null)
         {
+            OverlappingShipResult overlapping = AnyShipInGridOverlaps(_gridId,_shipId);
             //Prevents duplicate ships
             if(grid.HasShipOfType(ship.type))
             {
@@ -77,6 +126,11 @@ public class GridService : IGridService
             {
                 throw new CoordinateOutOfBoundsException(grid,ship.positions[ship.positions.Length-1]);
             }
+            //Prevents a ship that would be on top of an existing ship
+            else if(overlapping.position != "")
+            {
+                throw new GridHasShipAtPositionException(_gridId,overlapping.position, overlapping.shipId);
+            }
             //If no exceptions, add the ship
             else
             {
@@ -84,5 +138,61 @@ public class GridService : IGridService
             }
         }
         return grid;
+    }
+
+    /// <summary>
+    /// Returns whether any ship in the indicated grid already occupies any of the indicated ship's coordinates. If no overlap, the return will have "" as position
+    /// </summary>
+    /// <param name="_gridId"></param>
+    /// <param name="_shipId"></param>
+    /// <returns></returns>
+    public OverlappingShipResult AnyShipInGridOverlaps(int _gridId, int _shipId)
+    {
+        var grid = GetGridById(_gridId);
+        var ship = shipService.GetShipById(_shipId);
+        List<Ship> shipsInGrid = (List<Ship>)GetShipsInGrid(_gridId);
+        if(grid != null && ship != null)
+        {
+            foreach(string newShipPosition in ship.positions)
+            {
+                foreach(Ship existingShip in shipsInGrid)
+                {
+                    foreach(string existingShipPosition in existingShip.positions)
+                    {
+                        if(newShipPosition == existingShipPosition)
+                        {
+                            return new OverlappingShipResult(newShipPosition, existingShip.Id);
+                        }
+                    }
+                }
+            }
+        }
+        return new OverlappingShipResult();
+    }
+
+    /// <summary>
+    /// Returns any ship that is already at the indicated position. If no overlap, the return will have "" as position
+    /// </summary>
+    /// <param name="_gridId"></param>
+    /// <param name="_position"></param>
+    /// <returns></returns>
+    public OverlappingShipResult AnyShipInGridAtPosition(int _gridId, string _position)
+    {
+        var grid = GetGridById(_gridId);
+        Ship[] shipsInGrid = (Ship[])GetShipsInGrid(_gridId);
+        if(grid != null)
+        {
+            foreach(Ship existingShip in shipsInGrid)
+            {
+                foreach(string existingShipPosition in existingShip.positions)
+                {
+                    if(_position == existingShipPosition)
+                    {
+                        return new OverlappingShipResult(_position, existingShip.Id);
+                    }
+                }
+            }
+        }
+        return new OverlappingShipResult();
     }
 }

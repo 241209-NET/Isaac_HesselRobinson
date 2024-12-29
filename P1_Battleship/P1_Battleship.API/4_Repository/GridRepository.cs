@@ -19,6 +19,10 @@ public class GridRepository : IGridRepository
     {
         return gridContext.grids.Find(_gridId);
     }
+    public IEnumerable<Grid> GetAllGrids()
+    {
+        return gridContext.grids.ToList();
+    }
     public void DeleteGrid(int _gridId)
     {
         var grid = GetGridById(_gridId);
