@@ -33,6 +33,7 @@ public class GridRepository : IGridRepository
         {
             grid.SetSquareStatus(_coordinate, _status);
         }
+        gridContext.SaveChanges();
         return grid;
     }
     public Grid? AddShipToGrid(int _gridId, ShipType _type, int _ShipId)
@@ -42,6 +43,7 @@ public class GridRepository : IGridRepository
         {
             grid.AddShip(_type, _ShipId);
         }
+        gridContext.SaveChanges();
         return grid;
     }
 }

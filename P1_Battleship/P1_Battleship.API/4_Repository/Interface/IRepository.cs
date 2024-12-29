@@ -3,7 +3,7 @@ using Battleship.API.Model;
 namespace Battleship.API.Repository;
 public interface IShipRepository
 {
-    Ship CreateNewShip(string[] _positions, string _name);
+    Ship CreateNewShip(string[] _positions, ShipType _type, string _name);
     IEnumerable<Ship> GetAllShips();
     Ship? GetShipById(int _Id);
 }

@@ -10,9 +10,9 @@ public class ShipRepository : IShipRepository
 
     public ShipRepository(ShipContext _shipContext) => shipContext = _shipContext;
 
-    public Ship CreateNewShip(string[] _positions, string _name)
+    public Ship CreateNewShip(string[] _positions, ShipType _type, string _name)
     {
-        Ship newShip = new Ship(_positions, _name);
+        Ship newShip = new Ship(_positions, _type, _name);
         shipContext.ships.Add(newShip);
         shipContext.SaveChanges();
         return newShip;

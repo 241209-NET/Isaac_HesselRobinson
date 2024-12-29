@@ -6,7 +6,7 @@ namespace Battleship.API.Service;
 
 public class ShipService : IShipService
 {
-    string[] shipTypeNames = {"Destroyer", "Submarine", "Cruiser", "Battleship", "Carrier"};
+    static string[] shipTypeNames = {"Destroyer", "Submarine", "Cruiser", "Battleship", "Carrier"};
     private readonly IShipRepository shipRepository;
 
     public ShipService(IShipRepository _shipRepository) => shipRepository = _shipRepository;
@@ -33,7 +33,7 @@ public class ShipService : IShipService
             }
         }
         //If everything went well, make the ship!
-        return shipRepository.CreateNewShip(_positions, shipTypeNames[(int)_type]);
+        return shipRepository.CreateNewShip(_positions, _type, shipTypeNames[(int)_type]);
     }
 
     public IEnumerable<Ship> GetAllShips()
@@ -45,8 +45,18 @@ public class ShipService : IShipService
         Ship? ship = shipRepository.GetShipById(_Id);
         if(ship == null)
         {
-            throw new ShipUnknownException("No ship with Id " + _Id);
+            throw new ShipUnknownException(_Id);
         }
         return ship;
+    }
+
+    /// <summary>
+    /// Returns the string representing the name of the ship type
+    /// </summary>
+    /// <param name="_type"></param>
+    /// <returns></returns>
+    public static string GetNameOfShipType(ShipType _type)
+    {
+        return shipTypeNames[(int)_type];
     }
 }

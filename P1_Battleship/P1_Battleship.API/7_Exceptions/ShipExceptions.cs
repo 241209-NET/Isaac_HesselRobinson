@@ -3,8 +3,12 @@ namespace Battleship.API.ShipException;
 public class ShipUnknownException : Exception
 {
     public ShipUnknownException(){}
-    public ShipUnknownException(string message) : base(message){}
-    public ShipUnknownException(string message, Exception inner) : base(message, inner){}
+    public ShipUnknownException(int _shipId) : base(ConstructMessage(_shipId)){}
+    public ShipUnknownException(int _shipId, Exception inner) : base(ConstructMessage(_shipId), inner){}
+    static string ConstructMessage(int _shipId)
+    {
+        return "Unknown Ship: " + _shipId + ". There is no ship with that Id.";
+    }
 }
 public class ShipNonContiguousException : Exception
 {

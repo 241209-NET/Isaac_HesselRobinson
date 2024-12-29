@@ -12,32 +12,38 @@ public class GridController : ControllerBase
 
     public GridController(IGridService _gridService) => gridService = _gridService;
 
-    [HttpPost]
-    public IActionResult CreateNewGrid(int _width, int _height)
+    [HttpPost("{width}/{height}")]
+    public IActionResult CreateNewGrid(int width, int height)
     {
-        var result = gridService.CreateNewGrid(_width, _height);
+        var result = gridService.CreateNewGrid(width, height);
         return Ok(result);
     }
     
-    [HttpPatch]
-    public IActionResult ShootAtCoordinate(int _gridId, string _coordinate)
+    [HttpPatch("{gridId}/{shipId}")]
+    public IActionResult AddShipToGrid(int gridId, int shipId)
     {
-        var result = gridService.ShootAtCoordinate(_gridId, _coordinate);
+        var result = gridService.AddShipToGrid(gridId, shipId);
+        return Ok(result);
+    }
+    [HttpPatch("ShootAt/{gridId}/{coordinate}")]
+    public IActionResult ShootAtCoordinate(int gridId, string coordinate)
+    {
+        var result = gridService.ShootAtCoordinate(gridId, coordinate);
         return Ok(result);
     }
 
-    [HttpGet]
-    public IActionResult GetGridById(int _gridId)
+    [HttpGet("{Id}")]
+    public IActionResult GetGridById(int Id)
     {
-        var result = gridService.GetGridById(_gridId);
+        var result = gridService.GetGridById(Id);
         if(result is null) return NotFound();
         return Ok(result);
     }
 
-    [HttpDelete]
-    public IActionResult DeleteGrid(int _gridId)
+    [HttpDelete("{Id}")]
+    public IActionResult DeleteGrid(int Id)
     {
-        var result = gridService.DeleteGrid(_gridId);
+        var result = gridService.DeleteGrid(Id);
         if(result is null) return NotFound();
         return Ok(result);
     }

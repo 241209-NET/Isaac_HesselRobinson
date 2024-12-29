@@ -20,6 +20,7 @@ public class Ship
     public int size { get; set; } = 0;
     public string[] positions { get; set; } = { "0","0","0","0","0" };
     public bool[] hitPoints { get; set; } = { true, true, true, true, true };
+    public ShipType type { get; set; }
 
     public Ship () //never used, but I dislike underlines
     {
@@ -28,8 +29,9 @@ public class Ship
         positions = new string[size];
         hitPoints = new bool[size];
     }
-    public Ship (string[] _positions, string _shipName)
+    public Ship (string[] _positions, ShipType _type, string _shipName)
     {
+        type = _type;
         shipName = _shipName;
         size = _positions.Length;
         positions = new string[size];

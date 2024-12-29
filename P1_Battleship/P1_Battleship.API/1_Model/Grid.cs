@@ -30,7 +30,7 @@ public struct GridSquare
     public GridSquare(string _coordinate)
     {
         //Must subtract 1 extra from each because the display starts at A/1 but the code starts at 0/0
-        x = _coordinate.ToLower()[0] - 97; //a is 97 on the ASCII table
+        x = _coordinate.ToLower()[0] - Grid.ASCII_a;
         int.TryParse(_coordinate.Substring(1,_coordinate.Length - 1), out y);
         y -= 1;
         if(x < 0 || y < 0)
@@ -63,12 +63,14 @@ public struct GridSquare
 public class Grid
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int ID { get; set; }
+    public int Id { get; set; }
     public string[] columns { get; set; }
     public int width { get; set; }
     public int height { get; set; }
     public int[] shipIds { get; set; } = {-1,-1,-1,-1,-1};
 
+    public static int ASCII_A = 65;
+    public static int ASCII_a = 97;
     public Grid() //never used, but I don't like underlines
     {
         width = 1;
@@ -113,16 +115,9 @@ public class Grid
     /// </summary>
     /// <param name="_type"></param>
     /// <param name="_Id"></param>
-    /// <param name="_override">If true, will replace an existing ship. If false, will fail if such a ship already exists</param>
-    /// <returns>TRUE if ship added, FALSE if failed to add</returns>
-    public bool AddShip(ShipType _type, int _Id, bool _override = false)
+    public void AddShip(ShipType _type, int _Id)
     {
-        if(!HasShipOfType(_type) || _override)
-        {
-            shipIds[(int)_type] = _Id;
-            return true;
-        }
-        return false;
+        shipIds[(int)_type] = _Id;
     }
 
     /// <summary>

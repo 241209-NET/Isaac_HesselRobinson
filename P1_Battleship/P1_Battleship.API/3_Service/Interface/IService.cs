@@ -16,4 +16,5 @@ public interface IGridService
     Grid? GetGridById(int _gridId);
     Grid? DeleteGrid(int _gridId);
     Grid? ShootAtCoordinate(int _gridId, string _coordinate);
+    Grid? AddShipToGrid(int _gridId, int _shipId);
 }

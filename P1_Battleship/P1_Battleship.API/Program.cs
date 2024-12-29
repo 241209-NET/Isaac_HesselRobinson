@@ -1,5 +1,5 @@
 //dotnet run --project "C:\Users\Isaac\Desktop\Isaac_HesselRobinson\P1_Battleship\P1_Battleship.API"
-//dotnet ef migrations add ShipLowercaseId --context Battleship.API.Data.ShipContext
+//dotnet ef migrations add ShipType --context Battleship.API.Data.ShipContext
 //Server=localhost;User Id=sa;Password=NotPassword@123;TrustServerCertificate=true;
 using Microsoft.EntityFrameworkCore;
 using Battleship.API.Data;
