@@ -9,10 +9,11 @@ public class ShipRepository : IShipRepository
 
     public ShipRepository(ShipContext _shipContext) => shipContext = _shipContext;
 
-    public Ship CreateNewShip(Ship _newShip)
+    public Ship CreateNewShip(string[] _positions, string _name)
     {
-        shipContext.ships.Add(_newShip);
-        return _newShip;
+        Ship newShip = new Ship(_positions, _name);
+        shipContext.ships.Add(newShip);
+        return newShip;
     }
 
     public IEnumerable<Ship> GetAllShips()

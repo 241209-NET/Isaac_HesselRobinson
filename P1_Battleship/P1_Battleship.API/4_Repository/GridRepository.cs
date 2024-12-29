@@ -35,5 +35,13 @@ public class GridRepository : IGridRepository
         }
         return grid;
     }
-
+    public Grid? AddShipToGrid(int _gridId, ShipType _type, int _ShipId)
+    {
+        var grid = GetGridById(_gridId);
+        if(grid != null)
+        {
+            grid.AddShip(_type, _ShipId);
+        }
+        return grid;
+    }
 }

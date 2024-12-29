@@ -3,6 +3,15 @@ namespace Battleship.API.Model;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
+public enum ShipType
+{
+    DESTROYER,
+    SUBMARINE,
+    CRUISER,
+    BATTLESHIP,
+    CARRIER
+}
+
 public class Ship
 {
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,7 +28,7 @@ public class Ship
         positions = new string[size];
         hitPoints = new bool[size];
     }
-    public Ship (string _shipName, string[] _positions)
+    public Ship (string[] _positions, string _shipName)
     {
         shipName = _shipName;
         size = _positions.Length;

@@ -4,7 +4,7 @@ namespace Battleship.API.Service;
 
 public interface IShipService
 {
-    Ship CreateNewShip(Ship _newShip);
+    Ship CreateNewShip(string[] _positions, ShipType _type);
     IEnumerable<Ship> GetAllShips();
 }
 

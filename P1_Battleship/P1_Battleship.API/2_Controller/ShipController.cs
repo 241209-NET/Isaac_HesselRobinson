@@ -21,10 +21,19 @@ public class ShipController : ControllerBase
     }
 
 
-    [HttpPost]
-    public IActionResult CreateNewShip(Ship _newShip)
+    [HttpPost("Carrier")]
+    public IActionResult CreateCarrier(string _firstPosition, string _secondPosition, string _thirdPosition, string _fourthPosition, string _fifthPosition)
     {
-        var result = shipService.CreateNewShip(_newShip);
+        string[] positions = {_firstPosition,_secondPosition,_thirdPosition,_fourthPosition,_fifthPosition};
+        var result = shipService.CreateNewShip(positions, ShipType.CARRIER);
+        return Ok(result);
+    }
+
+    [HttpPost("Destroyer")]
+    public IActionResult CreateDestroyer(string _firstPosition, string _secondPosition)
+    {
+        string[] positions = {_firstPosition,_secondPosition};
+        var result = shipService.CreateNewShip(positions, ShipType.DESTROYER);
         return Ok(result);
     }
 }

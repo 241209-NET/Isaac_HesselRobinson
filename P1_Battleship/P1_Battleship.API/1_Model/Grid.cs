@@ -2,6 +2,7 @@ namespace Battleship.API.Model;
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Battleship.API.GridException;
 
 public enum SquareStatus
 {
@@ -9,6 +10,15 @@ public enum SquareStatus
     MISS,
     HIT,
     SUNK
+}
+
+public enum Direction
+{
+    NONCONTIGUOUS = -1,
+    UP,
+    RIGHT,
+    DOWN,
+    LEFT
 }
 
 //Used to easily convert an input coordinate string to a pair of ints
@@ -19,15 +29,32 @@ public struct GridSquare
 
     public GridSquare(string _coordinate)
     {
-        _coordinate = _coordinate.ToLower();
-        x = _coordinate[0] - 97; //a is 97 on the ASCII table
-        y = int.Parse(_coordinate.Substring(1,_coordinate.Length - 1));
+        //Must subtract 1 extra from each because the display starts at A/1 but the code starts at 0/0
+        x = _coordinate.ToLower()[0] - 97; //a is 97 on the ASCII table
+        int.TryParse(_coordinate.Substring(1,_coordinate.Length - 1), out y);
+        y -= 1;
+        if(x < 0 || y < 0)
+        {
+            throw new CoordinateMalformedException(_coordinate);
+        }
     }
 
-    public GridSquare(int _x, int _y)
+    /// <summary>
+    /// Returns which side of THIS borders _other. If they do not border, return NONCONTIGUOUS (-1)
+    /// </summary>
+    /// <param name="_other"></param>
+    /// <returns></returns>
+    public Direction BorderDirection(GridSquare _other)
     {
-        x = _x;
-        y = _y;
+        if(x == _other.x && y == _other.y - 1)
+            return Direction.UP;
+        if(y == _other.y && x == _other.x - 1)
+            return Direction.RIGHT;
+        if(x == _other.x && y == _other.y + 1)
+            return Direction.DOWN;
+        if(y == _other.y && x == _other.x + 1)
+            return Direction.LEFT;
+        return Direction.NONCONTIGUOUS;
     }
 }
 
@@ -70,6 +97,34 @@ public class Grid
             }
         }
     }
+
+    /// <summary>
+    /// Returns true if the grid already has a ship of the designated type
+    /// </summary>
+    /// <param name="_type"></param>
+    /// <returns></returns>
+    public bool HasShipOfType(ShipType _type)
+    {
+        return shipIds[(int)_type] > -1;
+    }
+
+    /// <summary>
+    /// Adds a reference to the specified ship
+    /// </summary>
+    /// <param name="_type"></param>
+    /// <param name="_Id"></param>
+    /// <param name="_override">If true, will replace an existing ship. If false, will fail if such a ship already exists</param>
+    /// <returns>TRUE if ship added, FALSE if failed to add</returns>
+    public bool AddShip(ShipType _type, int _Id, bool _override = false)
+    {
+        if(!HasShipOfType(_type) || _override)
+        {
+            shipIds[(int)_type] = _Id;
+            return true;
+        }
+        return false;
+    }
+
     /// <summary>
     /// Returns TRUE if the indicated square is present on the grid and FALSE if it is out of bounds
     /// </summary>
