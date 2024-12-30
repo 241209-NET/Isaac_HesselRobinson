@@ -105,6 +105,15 @@ public class GridService : IGridService
         return grid;
     }
     
+    /// <summary>
+    /// Adds an existing ship to this grid
+    /// </summary>
+    /// <param name="_gridId"></param>
+    /// <param name="_shipId"></param>
+    /// <returns></returns>
+    /// <exception cref="GridHasShipTypeException"></exception>
+    /// <exception cref="CoordinateOutOfBoundsException"></exception>
+    /// <exception cref="GridHasShipAtPositionException"></exception>
     public Grid? AddShipToGrid(int _gridId, int _shipId)
     {
         var grid = GetGridById(_gridId);
