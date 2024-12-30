@@ -92,14 +92,19 @@ public class GridService : IGridService
                 throw new CoordinateOutOfBoundsException(grid, _coordinate);
             }
             //Checks if it's a hit
-            else if(false)
-            {
-
-            }
-            //Miss
             else
             {
-                gridRepository.SetCoordinateStatus(_gridId, _coordinate, SquareStatus.MISS);
+                OverlappingShipResult result = AnyShipInGridAtPosition(_gridId,_coordinate);
+                //Hit
+                if(result.position == _coordinate)
+                {
+                    gridRepository.SetCoordinateStatus(_gridId, _coordinate, SquareStatus.HIT);
+                }
+                //Miss
+                else
+                {
+                    gridRepository.SetCoordinateStatus(_gridId, _coordinate, SquareStatus.MISS);
+                }
             }
         }
         return grid;
