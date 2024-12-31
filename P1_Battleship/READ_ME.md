@@ -30,15 +30,15 @@ This is a backend API made in .NET that allows users to play Battleship.
 ![ERD](./ERD.png)
 
 ## User Stories
-- As a player, I want the AI to set up its ships in a way that complies with game rules so that I have targets to find
+- As a player, I want the AI to set up its ships in a way that complies with game rules so that I have targets to find (Rejected)
 - As a player, I want to be able to view the grid & understand the status of each square so that I can make informed decisions
 - As a player, I want to be able to shoot at a specific square & know the result so that I can feel engaged in the play flow
 - As a player, I want the game to prevent me from making invalid shots so that I don't waste any actions
-- As a player, I want positive feedback when I win the game so that I feel like I've achieved something
+- As a player, I want positive feedback when I win the game so that I feel like I've achieved something (Rejected)
 - As a player, I want to be able to save & load gamestates so that I can play over multiple sessions 
 
 ## Stretch Goals
 - As a player, I want to be able to set up ships on my own grid so that I can participate in both sides of the Battleship game
-- As a player, I want the AI to shoot at my ships to provide tension about whether I'll win
-- As a player, I want the AI to make rational choices about shooting to provice an exciting challenge
-- As a player, I want to recieve feedback if I lose to make winning feel more rewarding
+- As a player, I want the AI to shoot at my ships to provide tension about whether I'll win (Rejected)
+- As a player, I want the AI to make rational choices about shooting to provice an exciting challenge (Rejected)
+- As a player, I want to recieve feedback if I lose to make winning feel more rewarding (Rejected)
