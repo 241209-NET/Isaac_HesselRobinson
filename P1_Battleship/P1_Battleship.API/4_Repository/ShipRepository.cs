@@ -26,4 +26,15 @@ public class ShipRepository : IShipRepository
     {
         return shipContext.ships.FirstOrDefault(o => o.Id == _Id);
     }
+
+    public Ship? HitShip(int _shipId, string _position)
+    {
+        Ship? ship = GetShipById(_shipId);
+        if(ship != null)
+        {
+            ship.TakeHit(_position);
+            shipContext.SaveChanges();
+        }
+        return ship;
+    }
 }

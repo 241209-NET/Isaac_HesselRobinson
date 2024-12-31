@@ -59,9 +59,8 @@ public class ShipService : IShipService
     {
         return shipTypeNames[(int)_type];
     }
-
-    /*public Ship? HitShip(int _shipId, string _position)
+    public Ship? HitShip(int _shipId, string _position)
     {
-
-    }*/
+        return shipRepository.HitShip(_shipId,_position);
+    }
 }

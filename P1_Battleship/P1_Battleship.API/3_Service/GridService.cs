@@ -91,7 +91,7 @@ public class GridService : IGridService
             {
                 throw new CoordinateOutOfBoundsException(grid, _coordinate);
             }
-            //Checks if it's a hit
+            //Checks if it's a hit; if so, hits the ship
             else
             {
                 OverlappingShipResult result = AnyShipInGridAtPosition(_gridId,_coordinate);
@@ -99,6 +99,8 @@ public class GridService : IGridService
                 if(result.position == _coordinate)
                 {
                     gridRepository.SetCoordinateStatus(_gridId, _coordinate, SquareStatus.HIT);
+                    shipService.HitShip(result.shipId,_coordinate);
+                    MarkShipIfSunk(_gridId, result.shipId);
                 }
                 //Miss
                 else
@@ -110,6 +112,23 @@ public class GridService : IGridService
         return grid;
     }
     
+    /// <summary>
+    /// Checks if the indicated ship is sunk; if so, marks all of its positions accordingly
+    /// </summary>
+    /// <param name="_gridId"></param>
+    /// <param name="_shipId"></param>
+    void MarkShipIfSunk(int _gridId, int _shipId)
+    {
+        Ship? ship = shipService.GetShipById(_shipId);
+        if(ship != null && !ship.IsAlive())
+        {
+            foreach(string position in ship.positions)
+            {
+                gridRepository.SetCoordinateStatus(_gridId, position, SquareStatus.SUNK);
+            }
+        }
+    }
+
     /// <summary>
     /// Adds an existing ship to this grid
     /// </summary>
@@ -193,7 +212,7 @@ public class GridService : IGridService
     public OverlappingShipResult AnyShipInGridAtPosition(int _gridId, string _position)
     {
         var grid = GetGridById(_gridId);
-        Ship[] shipsInGrid = (Ship[])GetShipsInGrid(_gridId);
+        List<Ship> shipsInGrid = (List<Ship>)GetShipsInGrid(_gridId);
         if(grid != null)
         {
             foreach(Ship existingShip in shipsInGrid)

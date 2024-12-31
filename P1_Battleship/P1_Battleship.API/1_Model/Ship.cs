@@ -43,6 +43,18 @@ public class Ship
         }
     }
 
+    public void TakeHit(string _position)
+    {
+        for(int i = 0; i < positions.Length; i++)
+        {
+            if(positions[i] == _position)
+            {
+                hitPoints[i] = false;
+                return;
+            }
+        }
+    }
+
     /// <summary>
     /// Evaluates whether any of the ship's positions have not yet been shot
     /// </summary>
