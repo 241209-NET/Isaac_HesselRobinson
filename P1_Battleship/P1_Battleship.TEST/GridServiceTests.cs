@@ -112,4 +112,29 @@ public class GridServiceTests
 ///////////////////////////////////////////////////////////////////////////////
 ///POST
 ///////////////////////////////////////////////////////////////////////////////
+    [Fact]
+    public void CreateNewGridCorrect()
+    {
+        //Arrange
+        Mock<IGridRepository> mockGridRepo = new();
+        Mock<IShipService> mockShipService = new();
+        GridService gridService = new(mockGridRepo.Object, mockShipService.Object);
+
+        int _width = 10;
+        int _height = 10;
+        Grid expected = new Grid{Id = 0,
+                columns = ["          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                width = 10,
+                height = 10,
+                shipIds = [-1, -1, -1, -1, -1 ]
+        };
+
+        mockGridRepo.Setup(repo => repo.CreateNewGrid(It.IsAny<Grid>())).Returns(new Grid(_width,_height));
+        
+        //Act
+        Grid result = gridService.CreateNewGrid(_width, _height);
+        
+        //Assert
+        Assert.Equivalent(expected, result);
+    }
 }
