@@ -27,6 +27,9 @@ public class GridService : IGridService
         shipService = _shipService;
     }
     
+///////////////////////////////////////////////////////////////////////////////
+///GET
+///////////////////////////////////////////////////////////////////////////////
     public Grid? GetGridById(int _gridId)
     {
         Grid? grid = gridRepository.GetGridById(_gridId);
@@ -61,7 +64,9 @@ public class GridService : IGridService
         return ships;
     }
 
-
+///////////////////////////////////////////////////////////////////////////////
+///POST
+///////////////////////////////////////////////////////////////////////////////
     public Grid CreateNewGrid(int _width, int _height)
     {
         Grid newGrid = new Grid(_width, _height);
@@ -71,6 +76,10 @@ public class GridService : IGridService
     {
         return gridRepository.CreateNewGrid(_newGrid);
     }
+
+///////////////////////////////////////////////////////////////////////////////
+///DELETE
+///////////////////////////////////////////////////////////////////////////////
     public Grid? DeleteGrid(int _gridId)
     {
         var grid = GetGridById(_gridId);
@@ -81,6 +90,9 @@ public class GridService : IGridService
         return grid;
     }
     
+///////////////////////////////////////////////////////////////////////////////
+///PATCH
+///////////////////////////////////////////////////////////////////////////////
     public Grid? ShootAtCoordinate(int _gridId, string _coordinate)
     {
         var grid = GetGridById(_gridId);
@@ -110,23 +122,6 @@ public class GridService : IGridService
             }
         }
         return grid;
-    }
-    
-    /// <summary>
-    /// Checks if the indicated ship is sunk; if so, marks all of its positions accordingly
-    /// </summary>
-    /// <param name="_gridId"></param>
-    /// <param name="_shipId"></param>
-    void MarkShipIfSunk(int _gridId, int _shipId)
-    {
-        Ship? ship = shipService.GetShipById(_shipId);
-        if(ship != null && !ship.IsAlive())
-        {
-            foreach(string position in ship.positions)
-            {
-                gridRepository.SetCoordinateStatus(_gridId, position, SquareStatus.SUNK);
-            }
-        }
     }
 
     /// <summary>
@@ -171,6 +166,26 @@ public class GridService : IGridService
             }
         }
         return grid;
+    }
+    
+///////////////////////////////////////////////////////////////////////////////
+///UTIL
+///////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// Checks if the indicated ship is sunk; if so, marks all of its positions accordingly
+    /// </summary>
+    /// <param name="_gridId"></param>
+    /// <param name="_shipId"></param>
+    void MarkShipIfSunk(int _gridId, int _shipId)
+    {
+        Ship? ship = shipService.GetShipById(_shipId);
+        if(ship != null && !ship.IsAlive())
+        {
+            foreach(string position in ship.positions)
+            {
+                gridRepository.SetCoordinateStatus(_gridId, position, SquareStatus.SUNK);
+            }
+        }
     }
 
     /// <summary>
