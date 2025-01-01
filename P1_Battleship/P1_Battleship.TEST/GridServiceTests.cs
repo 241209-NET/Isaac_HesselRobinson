@@ -153,4 +153,52 @@ public class GridServiceTests
 ///////////////////////////////////////////////////////////////////////////////
 ///PATCH
 ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///DELETE
+///////////////////////////////////////////////////////////////////////////////
+    /*[Fact]
+    public void DeleteGridTestValid()
+    {
+        //Arrange
+        Mock<IGridRepository> mockGridRepo = new();
+        Mock<IShipService> mockShipService = new();
+        GridService gridService = new(mockGridRepo.Object, mockShipService.Object);
+
+        Grid expected =
+            new Grid{Id = 1,
+                columns = ["          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                width = 10,
+                height = 10,
+                shipIds = [-1, -1, -1, -1, -1 ]
+            };
+
+        mockGridRepo.Setup(repo => repo.CreateNewGrid(expected)).Returns(expected);
+        
+        //Act
+        var result = gridService.DeleteGrid(1);
+        
+        //Assert
+        Assert.Equal(expected, result);
+    }*/
+    [Fact]
+    public void DeleteGridTestInvalid()
+    {
+        //Arrange
+        Mock<IGridRepository> mockGridRepo = new();
+        Mock<IShipService> mockShipService = new();
+        GridService gridService = new(mockGridRepo.Object, mockShipService.Object);
+
+        Grid expected =
+            new Grid{Id = 0,
+                columns = ["          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                width = 10,
+                height = 10,
+                shipIds = [-1, -1, -1, -1, -1 ]
+            };
+
+        mockGridRepo.Setup(repo => repo.DeleteGrid(2)).Returns(expected);
+        
+        //Assert
+        Assert.Throws<GridUnknownException>(() => gridService.DeleteGrid(2));
+    }
 }

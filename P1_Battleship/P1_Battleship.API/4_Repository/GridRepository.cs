@@ -23,11 +23,12 @@ public class GridRepository : IGridRepository
     {
         return gridContext.grids.ToList();
     }
-    public void DeleteGrid(int _gridId)
+    public Grid? DeleteGrid(int _gridId)
     {
         var grid = GetGridById(_gridId);
         gridContext.grids.Remove(grid!);
         gridContext.SaveChanges();
+        return grid;
     }
     
     public Grid? SetCoordinateStatus(int _gridId, string _coordinate, SquareStatus _status)

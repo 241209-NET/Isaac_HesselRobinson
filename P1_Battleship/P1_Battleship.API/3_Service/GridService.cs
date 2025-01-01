@@ -76,7 +76,7 @@ public class GridService : IGridService
         var grid = GetGridById(_gridId);
         if(grid != null)
         {
-            gridRepository.DeleteGrid(_gridId);
+            return gridRepository.DeleteGrid(_gridId);
         }
         return grid;
     }
