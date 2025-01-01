@@ -249,6 +249,59 @@ public class GridServiceTests
 ///UTIL
 ///////////////////////////////////////////////////////////////////////////////
     [Theory]
+    [InlineData(2, "", -1)]
+    [InlineData(3,"A1", 1)]
+    public void AnyShipInGridOverlapsTest(int _shipToAddId, string _expectedPosition, int _expectedId)
+    {
+        //Arrange
+        Mock<IGridRepository> mockGridRepo = new();
+        Mock<IShipService> mockShipService = new();
+        GridService gridService = new(mockGridRepo.Object, mockShipService.Object);
+
+        Grid newGrid = 
+            new Grid{Id = 1,
+                columns = ["          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                width = 10,
+                height = 10,
+                shipIds = [1, -1, -1, -1, -1 ]
+            };
+        List<Ship> shiplist = [
+            new Ship{ Id = 1,
+                shipName = "Destroyer",
+                size = 2,
+                positions = ["A1", "A2"],
+                hitPoints = [true,true],
+                type = 0
+            },
+            new Ship{ Id = 2,
+                shipName = "Submarine",
+                size = 3,
+                positions = ["J6", "J7", "J8"],
+                hitPoints = [true,true,true],
+                type = 0
+            },
+            new Ship{ Id = 3,
+                shipName = "Cruiser",
+                size = 3,
+                positions = ["A1", "B1", "C1"],
+                hitPoints = [true,true,true],
+                type = 0
+            }
+        ];
+        OverlappingShipResult expected = new OverlappingShipResult(_expectedPosition,_expectedId);
+
+        mockGridRepo.Setup(repo => repo.GetGridById(1)).Returns(newGrid);
+        mockShipService.Setup(service => service.GetShipById(1)).Returns(shiplist[0]);
+        mockShipService.Setup(service => service.GetShipById(2)).Returns(shiplist[1]);
+        mockShipService.Setup(service => service.GetShipById(3)).Returns(shiplist[2]);
+
+        //Act
+        var result = gridService.AnyShipInGridOverlaps(1,_shipToAddId);
+        
+        //Assert
+        Assert.Equal(expected, result);
+    }
+    [Theory]
     [InlineData("J10", "", -1)]
     [InlineData("A1","A1", 1)]
     public void AnyShipInGridAtPositionTest(string _positionToCheck, string _expectedPosition, int _expectedId)
