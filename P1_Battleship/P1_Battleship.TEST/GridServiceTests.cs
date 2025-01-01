@@ -1,4 +1,4 @@
-//reportgenerator -reports:".\P1_Battleship.TEST\TestResults\e0913fd0-3500-4f7f-8e79-b36e997a92f5\coverage.cobertura.xml" -targetdir:"P1_Battleship.TEST\TestResults\coveragereport" -reporttypes:Html classfilters:"+p1_Battleship.API.Service.*;
+//reportgenerator -reports:".\P1_Battleship.TEST\TestResults\4932c104-d1b6-4860-b7d5-0c546200b480\coverage.cobertura.xml" -targetdir:"P1_Battleship.TEST\TestResults\coveragereport" -reporttypes:Html classfilters:"+p1_Battleship.API.Service.*;
 
 
 using Moq;
@@ -108,11 +108,63 @@ public class GridServiceTests
         //Assert
         Assert.Throws<GridUnknownException>(() => gridService.GetGridById(_gridId));
     }
+
+    [Fact]
+    public void GetShipsInGridTest()
+    {
+        //Arrange
+        Mock<IGridRepository> mockGridRepo = new();
+        Mock<IShipService> mockShipService = new();
+        GridService gridService = new(mockGridRepo.Object, mockShipService.Object);
+
+        Grid newGrid = 
+            new Grid{Id = 1,
+                columns = ["          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                width = 10,
+                height = 10,
+                shipIds = [1, 2, 3, -1, -1 ]
+            };
+        List<Ship> expected = [
+            new Ship{ Id = 1,
+                shipName = "Destroyer",
+                size = 2,
+                positions = ["A1", "A2"],
+                hitPoints = [true,true],
+                type = 0
+            },
+            new Ship{ Id = 2,
+                shipName = "Submarine",
+                size = 3,
+                positions = ["D3", "E3", "F3"],
+                hitPoints = [true,true,true],
+                type = 0
+            },
+            new Ship{ Id = 3,
+                shipName = "Cruiser",
+                size = 3,
+                positions = ["J6", "J7", "J8"],
+                hitPoints = [true,true,true],
+                type = 0
+            }
+        ];
+
+        mockGridRepo.Setup(repo => repo.GetGridById(1)).Returns(newGrid);
+        mockShipService.Setup(service => service.GetShipById(1)).Returns(expected[0]);
+        mockShipService.Setup(service => service.GetShipById(2)).Returns(expected[1]);
+        mockShipService.Setup(service => service.GetShipById(3)).Returns(expected[2]);
+        
+        //Act
+        var result = gridService.GetShipsInGrid(1).ToList();
+        
+        //Assert
+        Assert.Equal(expected, result);
+    }
+
 ///////////////////////////////////////////////////////////////////////////////
 ///POST
 ///////////////////////////////////////////////////////////////////////////////
     [Fact]
-    public void CreateNewGridCorrect()
+    public void CreateNewGridTestCorrect()
     {
         //Arrange
         Mock<IGridRepository> mockGridRepo = new();
@@ -137,7 +189,7 @@ public class GridServiceTests
         Assert.Equivalent(expected, result);
     }
     [Fact]
-    public void CreateNewGridTooSmall()
+    public void CreateNewGridTestTooSmall()
     {
         //Arrange
         Mock<IGridRepository> mockGridRepo = new();
@@ -156,7 +208,7 @@ public class GridServiceTests
 ///////////////////////////////////////////////////////////////////////////////
 ///DELETE
 ///////////////////////////////////////////////////////////////////////////////
-    /*[Fact]
+    [Fact]
     public void DeleteGridTestValid()
     {
         //Arrange
@@ -172,14 +224,15 @@ public class GridServiceTests
                 shipIds = [-1, -1, -1, -1, -1 ]
             };
 
-        mockGridRepo.Setup(repo => repo.CreateNewGrid(expected)).Returns(expected);
+        mockGridRepo.Setup(repo => repo.GetGridById(1)).Returns(expected);
+        mockGridRepo.Setup(repo => repo.DeleteGrid(1)).Returns(expected);
         
         //Act
         var result = gridService.DeleteGrid(1);
         
         //Assert
         Assert.Equal(expected, result);
-    }*/
+    }
     [Fact]
     public void DeleteGridTestInvalid()
     {
