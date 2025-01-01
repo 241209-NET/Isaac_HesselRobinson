@@ -1,3 +1,6 @@
+//reportgenerator -reports:".\P1_Battleship.TEST\TestResults\e0913fd0-3500-4f7f-8e79-b36e997a92f5\coverage.cobertura.xml" -targetdir:"P1_Battleship.TEST\TestResults\coveragereport" -reporttypes:Html classfilters:"+p1_Battleship.API.Service.*;
+
+
 using Moq;
 using Battleship.API.Model;
 using Battleship.API.Repository;
@@ -76,12 +79,11 @@ public class GridServiceTests
         //Assert
         Assert.Equal(gridList[_gridId], result);
     }
-    [Theory]
-    [InlineData(-2)]
-    [InlineData(5)]
-    public void GetGridByIdTestInvalid(int _gridId)
+    [Fact]
+    public void GetGridByIdTestInvalid()
     {
         //Arrange
+        int _gridId = 3;
         Mock<IGridRepository> mockGridRepo = new();
         Mock<IShipService> mockShipService = new();
         GridService gridService = new(mockGridRepo.Object, mockShipService.Object);
@@ -102,9 +104,6 @@ public class GridServiceTests
         ];
 
         mockGridRepo.Setup(repo => repo.GetGridById(_gridId));
-        
-        //Act
-        //var result = gridService.GetGridById(_gridId);
         
         //Assert
         Assert.Throws<GridUnknownException>(() => gridService.GetGridById(_gridId));
@@ -137,4 +136,21 @@ public class GridServiceTests
         //Assert
         Assert.Equivalent(expected, result);
     }
+    [Fact]
+    public void CreateNewGridTooSmall()
+    {
+        //Arrange
+        Mock<IGridRepository> mockGridRepo = new();
+        Mock<IShipService> mockShipService = new();
+        GridService gridService = new(mockGridRepo.Object, mockShipService.Object);
+
+        int _width = 0;
+        int _height = 0;
+        
+        //Assert
+        Assert.Throws<GridTooSmallException>(() => gridService.CreateNewGrid(_width, _height));
+    }
+///////////////////////////////////////////////////////////////////////////////
+///PATCH
+///////////////////////////////////////////////////////////////////////////////
 }

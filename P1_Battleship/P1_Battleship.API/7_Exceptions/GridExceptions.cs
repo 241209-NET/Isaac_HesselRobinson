@@ -35,6 +35,16 @@ public class GridHasShipAtPositionException : Exception
         return "Overlapping ships: Grid " + _gridId + " already has ship with Id " + _shipId + " at position " + _position;;
     }
 }
+public class GridTooSmallException : Exception
+{
+    public GridTooSmallException(){}
+    public GridTooSmallException(int _width, int _height) : base(ConstructMessage(_width, _height)){}
+    public GridTooSmallException(int _width, int _height, Exception inner) : base(ConstructMessage(_width, _height), inner){}
+    static string ConstructMessage(int _width, int _height)
+    {
+        return "Grid bounds too small: " + _width + "," + _height + ". A grid must be at least 1 by 1.";
+    }
+}
 
 public class CoordinateOutOfBoundsException : Exception
 {

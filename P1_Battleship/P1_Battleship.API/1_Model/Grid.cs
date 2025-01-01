@@ -87,6 +87,10 @@ public class Grid
     }
     public Grid(int _width, int _height)
     {
+        if(_width < 1 || _height < 1)
+        {
+            throw new GridTooSmallException(_width,_height);
+        }
         width = _width;
         height = _height;
         columns = new string[width];
