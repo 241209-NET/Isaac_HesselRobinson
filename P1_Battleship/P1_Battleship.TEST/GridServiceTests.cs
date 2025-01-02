@@ -1,5 +1,5 @@
-//reportgenerator -reports:".\P1_Battleship.TEST\TestResults\4932c104-d1b6-4860-b7d5-0c546200b480\coverage.cobertura.xml" -targetdir:"P1_Battleship.TEST\TestResults\coveragereport" -reporttypes:Html classfilters:"+p1_Battleship.API.Service.*;
-
+//reportgenerator -reports:".\P1_Battleship.TEST\TestResults\39819975-6956-46da-b2d1-7dc89fd65f8c\coverage.cobertura.xml" -targetdir:"P1_Battleship.TEST\TestResults\coveragereport" -reporttypes:Html classfilters:"+p1_Battleship.API.Service.*;
+//dotnet test --collect: "XPlat Code Coverage"
 
 using Moq;
 using Battleship.API.Model;
@@ -249,6 +249,60 @@ public class GridServiceTests
 ///UTIL
 ///////////////////////////////////////////////////////////////////////////////
     [Theory]
+    [InlineData("J10", "", -1)]
+    [InlineData("A1","A1", 1)]
+    public void AnyShipInGridAtPositionTest(string _positionToCheck, string _expectedPosition, int _expectedId)
+    {
+        //Arrange
+        Mock<IGridRepository> mockGridRepo = new();
+        Mock<IShipService> mockShipService = new();
+        GridService gridService = new(mockGridRepo.Object, mockShipService.Object);
+
+        Grid newGrid = 
+            new Grid{Id = 1,
+                columns = ["          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                width = 10,
+                height = 10,
+                shipIds = [1, 2, 3, -1, -1 ]
+            };
+        List<Ship> shiplist = [
+            new Ship{ Id = 1,
+                shipName = "Destroyer",
+                size = 2,
+                positions = ["A1", "A2"],
+                hitPoints = [true,true],
+                type = 0
+            },
+            new Ship{ Id = 2,
+                shipName = "Submarine",
+                size = 3,
+                positions = ["D3", "E3", "F3"],
+                hitPoints = [true,true,true],
+                type = 0
+            },
+            new Ship{ Id = 3,
+                shipName = "Cruiser",
+                size = 3,
+                positions = ["J6", "J7", "J8"],
+                hitPoints = [true,true,true],
+                type = 0
+            }
+        ];
+        OverlappingShipResult expected = new OverlappingShipResult(_expectedPosition,_expectedId);
+
+        mockGridRepo.Setup(repo => repo.GetGridById(1)).Returns(newGrid);
+        mockShipService.Setup(service => service.GetShipById(1)).Returns(shiplist[0]);
+        mockShipService.Setup(service => service.GetShipById(2)).Returns(shiplist[1]);
+        mockShipService.Setup(service => service.GetShipById(3)).Returns(shiplist[2]);
+
+        //Act
+        var result = gridService.AnyShipInGridAtPosition(1,_positionToCheck);
+        
+        //Assert
+        Assert.Throws<GridUnknownException>(() => gridService.DeleteGrid(2));
+        Assert.Equal(expected, result);
+    }
+    [Theory]
     [InlineData(2, "", -1)]
     [InlineData(3,"A1", 1)]
     public void AnyShipInGridOverlapsTest(int _shipToAddId, string _expectedPosition, int _expectedId)
@@ -301,6 +355,7 @@ public class GridServiceTests
         //Assert
         Assert.Equal(expected, result);
     }
+
     [Theory]
     [InlineData(1,0)]
     [InlineData(2,1)]
