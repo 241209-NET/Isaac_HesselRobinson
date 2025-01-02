@@ -176,16 +176,18 @@ public class GridService : IGridService
     /// </summary>
     /// <param name="_gridId"></param>
     /// <param name="_shipId"></param>
-    void MarkShipIfSunk(int _gridId, int _shipId)
+    public Grid? MarkShipIfSunk(int _gridId, int _shipId)
     {
         Ship? ship = shipService.GetShipById(_shipId);
+        Grid? returnForTesting = gridRepository.GetGridById(_gridId);
         if(ship != null && !ship.IsAlive())
         {
             foreach(string position in ship.positions)
             {
-                gridRepository.SetCoordinateStatus(_gridId, position, SquareStatus.SUNK);
+                returnForTesting = gridRepository.SetCoordinateStatus(_gridId, position, SquareStatus.SUNK);
             }
         }
+        return returnForTesting;
     }
 
     /// <summary>

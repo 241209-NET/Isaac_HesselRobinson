@@ -302,9 +302,9 @@ public class GridServiceTests
         Assert.Equal(expected, result);
     }
     [Theory]
-    [InlineData("J10", "", -1)]
-    [InlineData("A1","A1", 1)]
-    public void AnyShipInGridAtPositionTest(string _positionToCheck, string _expectedPosition, int _expectedId)
+    [InlineData(1,0)]
+    [InlineData(2,1)]
+    public void MarkShipIfSunkTest(int _shipId, int _expectedGridId)
     {
         //Arrange
         Mock<IGridRepository> mockGridRepo = new();
@@ -313,17 +313,31 @@ public class GridServiceTests
 
         Grid newGrid = 
             new Grid{Id = 1,
-                columns = ["          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                columns = ["X         ", "X         ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
                 width = 10,
                 height = 10,
                 shipIds = [1, 2, 3, -1, -1 ]
             };
+        List<Grid> expected = [
+            new Grid{Id = 1,
+                columns = ["S         ", "S         ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                width = 10,
+                height = 10,
+                shipIds = [1, 2, 3, -1, -1 ]
+            },
+            new Grid{Id = 1,
+                columns = ["X         ", "X         ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                width = 10,
+                height = 10,
+                shipIds = [1, 2, 3, -1, -1 ]
+            },
+        ];
         List<Ship> shiplist = [
             new Ship{ Id = 1,
                 shipName = "Destroyer",
                 size = 2,
                 positions = ["A1", "A2"],
-                hitPoints = [true,true],
+                hitPoints = [false,false],
                 type = 0
             },
             new Ship{ Id = 2,
@@ -341,17 +355,28 @@ public class GridServiceTests
                 type = 0
             }
         ];
-        OverlappingShipResult expected = new OverlappingShipResult(_expectedPosition,_expectedId);
 
         mockGridRepo.Setup(repo => repo.GetGridById(1)).Returns(newGrid);
+        mockGridRepo.Setup(repo => repo.SetCoordinateStatus(1, "A1", SquareStatus.SUNK)).Returns(new Grid{Id = 1,
+                columns = ["S         ", "X         ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                width = 10,
+                height = 10,
+                shipIds = [1, 2, 3, -1, -1 ]
+            });
+        mockGridRepo.Setup(repo => repo.SetCoordinateStatus(1, "A2", SquareStatus.SUNK)).Returns(new Grid{Id = 1,
+                columns = ["S         ", "S         ", "          ", "          ", "          ", "          ", "          ", "          ", "          ", "          "],
+                width = 10,
+                height = 10,
+                shipIds = [1, 2, 3, -1, -1 ]
+            });
         mockShipService.Setup(service => service.GetShipById(1)).Returns(shiplist[0]);
         mockShipService.Setup(service => service.GetShipById(2)).Returns(shiplist[1]);
         mockShipService.Setup(service => service.GetShipById(3)).Returns(shiplist[2]);
 
         //Act
-        var result = gridService.AnyShipInGridAtPosition(1,_positionToCheck);
+        var result = gridService.MarkShipIfSunk(1,_shipId);
         
         //Assert
-        Assert.Equal(expected, result);
+        Assert.Equivalent(expected[_expectedGridId], result);
     }
 }
