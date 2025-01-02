@@ -162,7 +162,7 @@ public class GridService : IGridService
             //If no exceptions, add the ship
             else
             {
-                gridRepository.AddShipToGrid(_gridId,ship.type, ship.Id);
+                grid = gridRepository.AddShipToGrid(_gridId,ship.type, ship.Id);
             }
         }
         return grid;
