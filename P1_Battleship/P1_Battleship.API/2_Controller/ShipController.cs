@@ -16,50 +16,92 @@ public class ShipController : ControllerBase
     [HttpGet]
     public IActionResult GetAllShips()
     {
-        var result = shipService.GetAllShips();
-        return Ok(result);
+        try{
+            var result = shipService.GetAllShips();
+            return Ok(result);
+        }
+        catch(Exception e)
+        {
+            return Problem(e.Message);
+        }
     }
     [HttpGet("{Id}")]
     public IActionResult GetShipById(int Id)
     {
-        var result = shipService.GetShipById(Id);
-        return Ok(result);
+        try{
+            var result = shipService.GetShipById(Id);
+            return Ok(result);
+        }
+        catch(Exception e)
+        {
+            return Problem(e.Message);
+        }
     }
 
 
     [HttpPost("Carrier/{_firstPosition}/{_secondPosition}/{_thirdPosition}/{_fourthPosition}/{_fifthPosition}")]
     public IActionResult CreateCarrier(string _firstPosition, string _secondPosition, string _thirdPosition, string _fourthPosition, string _fifthPosition)
     {
-        string[] positions = {_firstPosition,_secondPosition,_thirdPosition,_fourthPosition,_fifthPosition};
-        var result = shipService.CreateNewShip(positions, ShipType.CARRIER);
-        return Ok(result);
+        try{
+            string[] positions = {_firstPosition,_secondPosition,_thirdPosition,_fourthPosition,_fifthPosition};
+            var result = shipService.CreateNewShip(positions, ShipType.CARRIER);
+            return Ok(result);
+        }
+        catch(Exception e)
+        {
+            return Problem(e.Message);
+        }
     }
     [HttpPost("Battleship/{_firstPosition}/{_secondPosition}/{_thirdPosition}/{_fourthPosition}")]
     public IActionResult CreateBattleship(string _firstPosition, string _secondPosition, string _thirdPosition, string _fourthPosition)
     {
-        string[] positions = {_firstPosition,_secondPosition,_thirdPosition,_fourthPosition};
-        var result = shipService.CreateNewShip(positions, ShipType.BATTLESHIP);
-        return Ok(result);
+        try{
+            string[] positions = {_firstPosition,_secondPosition,_thirdPosition,_fourthPosition};
+            var result = shipService.CreateNewShip(positions, ShipType.BATTLESHIP);
+            return Ok(result);
+        }
+        catch(Exception e)
+        {
+            return Problem(e.Message);
+        }
     }
     [HttpPost("Cruiser/{_firstPosition}/{_secondPosition}/{_thirdPosition}")]
     public IActionResult CreateCruiser(string _firstPosition, string _secondPosition, string _thirdPosition)
     {
-        string[] positions = {_firstPosition,_secondPosition,_thirdPosition};
-        var result = shipService.CreateNewShip(positions, ShipType.CRUISER);
-        return Ok(result);
+        try{
+            string[] positions = {_firstPosition,_secondPosition,_thirdPosition};
+            var result = shipService.CreateNewShip(positions, ShipType.CRUISER);
+            return Ok(result);
+        }
+        catch(Exception e)
+        {
+            return Problem(e.Message);
+        }
     }
     [HttpPost("Submarine/{_firstPosition}/{_secondPosition}/{_thirdPosition}")]
     public IActionResult CreateSubmarine(string _firstPosition, string _secondPosition, string _thirdPosition)
     {
-        string[] positions = {_firstPosition,_secondPosition,_thirdPosition};
-        var result = shipService.CreateNewShip(positions, ShipType.SUBMARINE);
-        return Ok(result);
+        try{
+            string[] positions = {_firstPosition,_secondPosition,_thirdPosition};
+            var result = shipService.CreateNewShip(positions, ShipType.SUBMARINE);
+            return Ok(result);
+        }
+        catch(Exception e)
+        {
+            return Problem(e.Message);
+        }
     }
     [HttpPost("Destroyer/{_firstPosition}/{_secondPosition}")]
     public IActionResult CreateDestroyer(string _firstPosition, string _secondPosition)
     {
-        string[] positions = {_firstPosition,_secondPosition};
-        var result = shipService.CreateNewShip(positions, ShipType.DESTROYER);
-        return Ok(result);
+        try{
+            string[] positions = {_firstPosition,_secondPosition};
+            var result = shipService.CreateNewShip(positions, ShipType.DESTROYER);
+            return Ok(result);
+        }
+        catch(Exception e)
+        {
+            return Problem(e.Message);
+        }
     }
 }
