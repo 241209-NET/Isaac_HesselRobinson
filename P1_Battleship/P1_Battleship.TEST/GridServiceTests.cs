@@ -1,4 +1,4 @@
-//reportgenerator -reports:".\P1_Battleship.TEST\TestResults\39819975-6956-46da-b2d1-7dc89fd65f8c\coverage.cobertura.xml" -targetdir:"P1_Battleship.TEST\TestResults\coveragereport" -reporttypes:Html classfilters:"+p1_Battleship.API.Service.*;
+//reportgenerator -reports:".\JJIMP.Tests\TestResults\51a37d7e-f43b-4c42-b0d8-48b1822a2bbb\coverage.cobertura.xml" -targetdir:"JJIMP.Tests\TestResults\coveragereport" -reporttypes:Html -classfilters:"+JJIMP.API.Service.*"
 //dotnet test --collect: "XPlat Code Coverage"
 
 using Moq;
